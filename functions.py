@@ -90,34 +90,33 @@ def solve(f,framework,tries,v_poss,h_poss,b_poss):
                             remaining_possibilities=np.intersect1d(np.intersect1d(v_poss[l[1]],h_poss[l[2]]),b_poss[l[3]])
                             #print(remaining_possibilities)
                             if len(remaining_possibilities)==1:
-                                print (f'replace index {ii}{ij}{ik}{il} with {remaining_possibilities[0]}')
+                                # print (f'replace index {ii}{ij}{ik}{il} with {remaining_possibilities[0]}')
                                 framework[ii,ij,ik,il]=remaining_possibilities[0]
                                 f[ii,ij,ik,il,0]=remaining_possibilities[0]
                             elif (len(remaining_possibilities)==0):
-                                print('sudoku is not possible')
+                                # print('sudoku is not possible')
                                 return [2,None]
                             else:
                                 remaining +=1
                                 remain_possible["possible_num"].append(remaining_possibilities)
                                 remain_possible["position"].append([ii,ij,ik,il])
         count +=1
-        if remaining==0:return [0,remain_possible]
+        if remaining==0:print('sudoku is solved');return [0,remain_possible]
         if count>tries:return [1,remain_possible]
-    print(f'sudoku complete time taken is {(time.now()-t0).total_seconds()*1000} ms') if remaining ==0 else print (f'sudoku is still not completed after {(time.now()-t0).total_seconds()*1000} ms')
+    print(f'sudoku completed after {(time.now()-t0).total_seconds()*1000} ms') if remaining ==0 else print (f'sudoku is still not completed after {(time.now()-t0).total_seconds()*1000} ms')
 
 
 
 def plot(framework):
-    df=[]
+    ''' This function is used to plot the sudoku into a matplotlib chart'''
+    data = []
     for i in framework:
         for j in i:
-            df.append(pd.DataFrame(j))
+            data.append(pd.DataFrame(j))
 
-    fig,axn = plt.subplots(3, 3, sharex=True, sharey=True)
+    _, axn = plt.subplots(3, 3, sharex=True, sharey=True)
 
-    for ax,dfi in zip(np.swapaxes(axn,0,1).flat,df):
-        sns.heatmap(dfi,annot=True, ax=ax, cbar=False, cmap='Greys')
-        ax.get_xaxis().set_visible(False)
-        ax.get_yaxis().set_visible(False)
-
-
+    for axis, dfi in zip(np.swapaxes(axn, 0, 1).flat, data):
+        sns.heatmap(dfi, annot=True, ax=axis, cbar=False, cmap='Greys')
+        axis.get_xaxis().set_visible(False)
+        axis.get_yaxis().set_visible(False)
